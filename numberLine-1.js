@@ -81,20 +81,67 @@ $(function() {
 	function calculateFinalAnswer(arr, calcType) {
 		switch(calcType) {
 			case 'mean':
-				console.log('mean selected');
+				calculateMean(arr);
 				break;
 			case 'median':
-				console.log('median selected');
+				calculateMedian(arr);
 				break;
 			case 'mode':
-				console.log('mode selected');
+				calculateMode(arr);
 				break;
 			case 'range':
-			console.log('range selected');
-			break;
+				calculateRange(arr);
+				break;
 			default :
 				break;
 		}
+	}
+	//Calculate Mean for all the numbers selected
+	function calculateMean(arr) {
+		let sum =0, mean =0;
+		arr.forEach(el => sum = sum +el);
+		mean = sum /arr.length;
+		console.log(mean);
+	}
+	//Calculate Median for all the numbers selected
+	function calculateMedian(arr) {
+		let median = 0;
+		const arrSorted = arr.sort(function (a, b) {  return a - b;  });
+		if(arrSorted.length % 2 !== 0) {
+			median = arrSorted[Math.floor(arrSorted.length/2)]
+		}
+		if(arrSorted.length % 2 === 0) {
+			median = (arrSorted[Math.floor(arrSorted.length/2)] + arrSorted[Math.floor(arrSorted.length/2) -1])/ 2;
+		}
+		console.log(median);
+	}
+	//Calculate Mode for all the numbers selected
+	function calculateMode(arr) {
+        let freqMap = new Map();
+        for (let i=0;i<arr.length;i++) {
+            if (freqMap.has(arr[i])) {
+                freqMap.set(arr[i], freqMap.get(arr[i]) + 1);
+            }
+            else {
+                freqMap.set(arr[i], 1);
+            }
+        }
+		let mode = [...freqMap.entries()].reduce((a, e ) => e[1] > a[1] ? e : a)
+		if(mode[1] === 1) {
+			console.log('No mode for the numbers entered');
+		}
+		else {
+			mode = mode[0];
+			console.log(mode);
+		}
+	}
+	//Calculate Range for all the numbers selected
+	function calculateRange(arr) {
+		let range =0;
+		const arrSorted = arr.sort(function (a, b) {  return a - b;  });
+		console.log(arr);
+		range = arrSorted[arrSorted.length -1] - arrSorted[0];
+		console.log(range);
 	}
 
 	function init() {
