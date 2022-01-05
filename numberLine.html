@@ -1,0 +1,59 @@
+<!DOCTYPE html> 
+<html>
+<head>
+  <title>Number Line </title>
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="numberLine-1.js"></script>
+	<link rel="stylesheet" href="numberLine.css">
+  </head>
+  <body>
+	  <div class="canvas-container"><canvas id="canvas"></canvas></div>
+    <!-- <canvas id="canvas"  width="1000" height="500"></canvas> -->
+	<div class="feedbackSection">
+		<h3>Feedback</h3>
+
+		<div class="success-1">You are going in the right direction</div>
+
+		<div class="success-2">You are almost there!</div>
+
+		<div class="success-3">You have found the right answer.</div>
+
+		<div class="fail-1">Try going back in the opposite direction</div>
+
+		<div class="fail-2">You have have taken the wrong direction. Try again!</div>
+	</div>
+	<div class="numberLineDets">
+		<div class="numberSelected">
+			<span>Numbers Selected: </span>
+			<span id="selectedVals"></span>
+		</div>
+	
+		<div class="numberSorted">
+			<span>Sorted Values: </span>
+			<span id="sortedVals"></span>
+		</div>
+		
+		<div class="calcTypes"> 
+  			<input type="radio" id="mean" name="calc" value="mean">
+ 			<label for="mean">Mean</label>
+  			<input type="radio" id="median" name="calc" value="median">
+  			<label for="median">Median</label>
+  			<input type="radio" id="mode" name="calc" value="mode">
+  			<label for="mode">Mode</label>
+			<input type="radio" id="range" name="calc" value="range">
+  			<label for="range">Range</label>
+		</div>
+		<div class="calcButton">
+			<input type="button" id="calcBtn" class="calcBtn" value="Calculate" click="startCalc()"/>
+			<input type="button" id="rstBtn" class="rstBtn" value="Reset" click="reloadPage()"/>
+		</div>
+	</div>
+	<div class="finalAnswerReveal">
+		<h3>Mode is the value or values in the data set that occur most frequently.<br>
+		For the data set : 0,0,0,4,4,4,4,4,8,10,13,16<br><br>
+		Mode = 4
+		</h3>
+	</div>
+	
+  </body>
+</html>
