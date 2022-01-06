@@ -19,6 +19,8 @@ $(function() {
 	var starti=0;
 	var endi=20;
 	var interval = 30;
+
+	let pointerValue;
 	
 	//To manage numbers inpute buy the user related 
 	const arrayNum = [];
@@ -44,10 +46,13 @@ $(function() {
 
 	const resetButton = document.querySelector("#rstBtn");
 	const calculateButton = document.querySelector("#calcBtn");
-	resetButton.addEventListener('click', (resetSelections) => {
-		console.log('reset Button CLicked');
+	resetButton.addEventListener('click', () => {
+		arrayNum.length= 0;
+		document.querySelector("#selectedVals").innerHTML = "No number selected";
+		document.querySelector("#sortedVals").innerHTML = "No number selected";
+		document.querySelector('input[name="calc"]:checked').checked = false;
 	});
-	calculateButton.addEventListener('click', (calculate) => {
+	calculateButton.addEventListener('click', () => {
 		let arr = arrayNum.map(e => (e-190)/30);
 		let checkNumberSelected = checkNumberSelection(arr);
 		let calcTypeSelected = calculationTypeSelected();
@@ -269,10 +274,12 @@ $(function() {
 
 	function myMove(e){
 		if (dragok){
+			console.log('inside myMove');
 			x = e.pageX - canvas.offsetLeft;
 			y = e.pageY - canvas.offsetTop;
 			x1= e.pageX - canvas.offsetLeft;
 			//y1 = e.pageY - canvas.offsetTop;
+			pointerValue = (x1-190)/30;
 		}
 	}
 
