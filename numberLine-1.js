@@ -20,7 +20,7 @@ $(function() {
 	var endi=20;
 	var interval = 30;
 
-	let pointerValue;
+	let pointerValue =0, mean, median, mode, range;
 	
 	//To manage numbers inpute buy the user related 
 	const arrayNum = [];
@@ -59,6 +59,7 @@ $(function() {
 		if(checkNumberSelected && calcTypeSelected) {
 			calcType = document.querySelectorAll('input[name="calc"]:checked')[0].value;
 			calculateFinalAnswer(arr, calcType);
+			console.log('Final Answer =',finalAnswer);
 		}
 	});
 
@@ -103,14 +104,15 @@ $(function() {
 	}
 	//Calculate Mean for all the numbers selected
 	function calculateMean(arr) {
-		let sum =0, mean =0;
+		let sum =0;
 		arr.forEach(el => sum = sum +el);
 		mean = sum /arr.length;
-		console.log(mean);
+		finalAnswer = mean;
+		//console.log(mean);
+		// calculateNormalDistributionRange(mean);
 	}
 	//Calculate Median for all the numbers selected
 	function calculateMedian(arr) {
-		let median = 0;
 		const arrSorted = arr.sort(function (a, b) {  return a - b;  });
 		if(arrSorted.length % 2 !== 0) {
 			median = arrSorted[Math.floor(arrSorted.length/2)]
@@ -118,7 +120,8 @@ $(function() {
 		if(arrSorted.length % 2 === 0) {
 			median = (arrSorted[Math.floor(arrSorted.length/2)] + arrSorted[Math.floor(arrSorted.length/2) -1])/ 2;
 		}
-		console.log(median);
+		finalAnswer = median;
+		//console.log(median);
 	}
 	//Calculate Mode for all the numbers selected
 	function calculateMode(arr) {
@@ -131,22 +134,72 @@ $(function() {
                 freqMap.set(arr[i], 1);
             }
         }
-		let mode = [...freqMap.entries()].reduce((a, e ) => e[1] > a[1] ? e : a)
+		mode = [...freqMap.entries()].reduce((a, e ) => e[1] > a[1] ? e : a)
 		if(mode[1] === 1) {
 			console.log('No mode for the numbers entered');
 		}
 		else {
 			mode = mode[0];
-			console.log(mode);
+			//console.log(mode);
 		}
+		finalAnswer = mode;
 	}
 	//Calculate Range for all the numbers selected
 	function calculateRange(arr) {
-		let range =0;
 		const arrSorted = arr.sort(function (a, b) {  return a - b;  });
 		console.log(arr);
 		range = arrSorted[arrSorted.length -1] - arrSorted[0];
 		console.log(range);
+		finalAnswer = range;
+	}
+
+	function calculateNormalDistributionRange(finalAnswer) {
+		let oneSD , twoSD, threeSD;
+		oneSD = 0.341 * finalAnswer;
+		twoSD = 0.477 * finalAnswer;
+		threeSD = 0.498 * finalAnswer;
+		if(pointerValue == finalAnswer) {
+			console.log('correct Answer');
+			const note = document.querySelector("#correctGuess");
+			note.style.cssText += 'color:#228C22;border:2px solid #228C22';
+		}
+		if(pointerValue > finalAnswer) {
+			console.log(pointerValue);
+			if(pointerValue <= finalAnswer+oneSD) {
+				console.log('One SD on the right',finalAnswer+oneSD );
+				const note = document.querySelector("#sd-1-left");
+				note.style.cssText += 'color:#228C22;border:2px solid #228C22';
+			}
+			else if(pointerValue > finalAnswer+oneSD && pointerValue <= finalAnswer+twoSD) {
+				console.log('Two SD on the right',finalAnswer+twoSD );
+				const note = document.querySelector("#sd-2-left");
+				note.style.cssText += 'color:#00915F;border:2px solid #00915F';
+			}
+			else if(pointerValue > finalAnswer+twoSD && pointerValue <= finalAnswer+threeSD) {
+				console.log('three SD on the right',finalAnswer+threeSD );
+				const note = document.querySelector("#sd-3-or-more");
+				note.style.cssText += 'color:#FF966F;border:2px solid #FF966F';
+			}
+			else {
+				console.log('Four SD on the right');
+				const note = document.querySelector("#sd-3-or-more");
+				note.style.cssText += 'color:red;border:2px solid red';
+			}
+		}
+		if(pointerValue < finalAnswer) {
+			if(pointerValue >= finalAnswer-oneSD) {
+				console.log('One SD on the left',finalAnswer-oneSD );
+			}
+			else if(pointerValue < finalAnswer-oneSD && pointerValue >= finalAnswer-twoSD) {
+				console.log('Two SD on the left',finalAnswer-twoSD );
+			}
+			else if(pointerValue < finalAnswer-twoSD && pointerValue >= finalAnswer-threeSD) {
+				console.log('three SD on the left',finalAnswer-threeSD );
+			}
+			else {
+				console.log('Four SD on the left');
+			}
+		}
 	}
 
 	function init() {
@@ -279,7 +332,8 @@ $(function() {
 			y = e.pageY - canvas.offsetTop;
 			x1= e.pageX - canvas.offsetLeft;
 			//y1 = e.pageY - canvas.offsetTop;
-			pointerValue = (x1-190)/30;
+			pointerValue = (x1-190)/30 - 0.3333333333333333;
+			calculateNormalDistributionRange(finalAnswer);
 		}
 	}
 
