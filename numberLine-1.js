@@ -5,8 +5,8 @@ $(function() {
 	var ctx;
 	var x = 75;
 	var y = 50;
-	var x1 =200;
-	var y1 = 250;
+	var x1 =130;
+	var y1 = 160;
 	// var WIDTH = 1000;
 	// var HEIGHT = 500;
 	var WIDTH = canvasSize.offsetWidth-10;
@@ -18,11 +18,11 @@ $(function() {
 	//To create number Line
 	var starti=0;
 	var endi=20;
-	var interval = 30;
+	var interval = 65;
 
 	let pointerValue =0, mean, median, mode, range;
 	
-	//To manage numbers inpute buy the user related 
+	//To manage numbers inpute by the user related 
 	const arrayNum = [];
 	const countOccurrences = (arr, el) => arr.reduce((arr, n) => (n === el ? arr + 1 : arr), 0);
 	function fitToContainer(canvasSize){
@@ -53,7 +53,7 @@ $(function() {
 		document.querySelector('input[name="calc"]:checked').checked = false;
 	});
 	calculateButton.addEventListener('click', () => {
-		let arr = arrayNum.map(e => (e-190)/30);
+		let arr = arrayNum.map(e => (e-140)/65);
 		let checkNumberSelected = checkNumberSelection(arr);
 		let calcTypeSelected = calculationTypeSelected();
 		if(checkNumberSelected && calcTypeSelected) {
@@ -107,7 +107,7 @@ $(function() {
 		let sum =0;
 		arr.forEach(el => sum = sum +el);
 		mean = sum /arr.length;
-		finalAnswer = mean;
+		finalAnswer = mean.toFixed(1);
 		//console.log(mean);
 		// calculateNormalDistributionRange(mean);
 	}
@@ -120,7 +120,7 @@ $(function() {
 		if(arrSorted.length % 2 === 0) {
 			median = (arrSorted[Math.floor(arrSorted.length/2)] + arrSorted[Math.floor(arrSorted.length/2) -1])/ 2;
 		}
-		finalAnswer = median;
+		finalAnswer = median.toFixed(1);
 		//console.log(median);
 	}
 	//Calculate Mode for all the numbers selected
@@ -142,7 +142,7 @@ $(function() {
 			mode = mode[0];
 			//console.log(mode);
 		}
-		finalAnswer = mode;
+		finalAnswer = mode.toFixed(1);
 	}
 	//Calculate Range for all the numbers selected
 	function calculateRange(arr) {
@@ -150,7 +150,7 @@ $(function() {
 		console.log(arr);
 		range = arrSorted[arrSorted.length -1] - arrSorted[0];
 		console.log(range);
-		finalAnswer = range;
+		finalAnswer = range.toFixed(1);
 	}
 
 	function calculateNormalDistributionRange(finalAnswer) {
@@ -158,48 +158,72 @@ $(function() {
 		oneSD = 0.341 * finalAnswer;
 		twoSD = 0.477 * finalAnswer;
 		threeSD = 0.498 * finalAnswer;
+		console.log(finalAnswer);
 		if(pointerValue == finalAnswer) {
-			console.log('correct Answer');
+			console.log('correct Answer', pointerValue);
+			changeFeedbackStyles();
 			const note = document.querySelector("#correctGuess");
-			note.style.cssText += 'color:#228C22;border:2px solid #228C22';
+			note.style.cssText += 'color:#FFF;border:2px solid #228C22; background-color:#228C22';
 		}
 		if(pointerValue > finalAnswer) {
 			console.log(pointerValue);
 			if(pointerValue <= finalAnswer+oneSD) {
-				console.log('One SD on the right',finalAnswer+oneSD );
-				const note = document.querySelector("#sd-1-left");
-				note.style.cssText += 'color:#228C22;border:2px solid #228C22';
+				console.log('One SD on the right',pointerValue );
+				changeFeedbackStyles();
+				const note = document.querySelector("#sd-1-right");
+				note.style.cssText += 'color:#FFF;border:2px solid #228C22; background-color:#228C22';
 			}
 			else if(pointerValue > finalAnswer+oneSD && pointerValue <= finalAnswer+twoSD) {
-				console.log('Two SD on the right',finalAnswer+twoSD );
-				const note = document.querySelector("#sd-2-left");
-				note.style.cssText += 'color:#00915F;border:2px solid #00915F';
+				console.log('Two SD on the right',pointerValue );
+				changeFeedbackStyles();
+				const note = document.querySelector("#sd-2-right");
+				note.style.cssText += 'color:#FFF;border:2px solid #00915F; background-color:#00915F';
 			}
 			else if(pointerValue > finalAnswer+twoSD && pointerValue <= finalAnswer+threeSD) {
-				console.log('three SD on the right',finalAnswer+threeSD );
+				console.log('three SD on the right',pointerValue );
+				changeFeedbackStyles();
 				const note = document.querySelector("#sd-3-or-more");
-				note.style.cssText += 'color:#FF966F;border:2px solid #FF966F';
+				note.style.cssText += 'color:#FFF;border:2px solid #FF966F; background-color:#FF966F';
 			}
 			else {
 				console.log('Four SD on the right');
+				changeFeedbackStyles();
 				const note = document.querySelector("#sd-3-or-more");
-				note.style.cssText += 'color:red;border:2px solid red';
+				note.style.cssText += 'color:#FFF;border:2px solid red; background-color:red';
 			}
 		}
 		if(pointerValue < finalAnswer) {
 			if(pointerValue >= finalAnswer-oneSD) {
-				console.log('One SD on the left',finalAnswer-oneSD );
+				console.log('One SD on the left',pointerValue);
+				changeFeedbackStyles();
+				const note = document.querySelector("#sd-1-left");
+				note.style.cssText += 'color:#FFF;border:2px solid #228C22; background-color:#228C22';
 			}
 			else if(pointerValue < finalAnswer-oneSD && pointerValue >= finalAnswer-twoSD) {
-				console.log('Two SD on the left',finalAnswer-twoSD );
+				console.log('Two SD on the left',pointerValue );
+				changeFeedbackStyles();
+				const note = document.querySelector("#sd-2-left");
+				note.style.cssText += 'color:#FFF;border:2px solid #00915F; background-color:#00915F';
 			}
 			else if(pointerValue < finalAnswer-twoSD && pointerValue >= finalAnswer-threeSD) {
-				console.log('three SD on the left',finalAnswer-threeSD );
+				console.log('three SD on the left',pointerValue );
+				changeFeedbackStyles();
+				const note = document.querySelector("#sd-3-or-more");
+				note.style.cssText += 'color:#FFF;border:2px solid #FF966F; background-color: #FF966F;';
 			}
 			else {
-				console.log('Four SD on the left');
+				console.log('Four SD on the left', pointerValue);
+				changeFeedbackStyles();
+				const note = document.querySelector("#sd-3-or-more");
+				note.style.cssText += 'color:#FFF;border:2px solid red; background-color: red;';
 			}
 		}
+	}
+
+	changeFeedbackStyles = () => {
+		document.querySelectorAll(".feedback").forEach (el => 
+			el.style.cssText += 'color:#000;border:2px solid #000; background-color: transparent'
+		);
 	}
 
 	function init() {
@@ -222,7 +246,7 @@ $(function() {
 		  const n = countOccurrences(arrayNum, val);
 		  for (let i = 0; i < n; i++) {
 			ctx.beginPath();
-			ctx.arc(val+9,(HEIGHT/1.5-17)-(i*30),15,0,2*Math.PI);
+			ctx.arc(val-10,(HEIGHT/1.5-17)-(i*30),15,0,2*Math.PI);
 			ctx.stroke();
 		  }
 		}
@@ -250,28 +274,28 @@ $(function() {
 			lineWidth = 3;
 			strokeStyle = '#7cb9e8';
 			//Draw the number line
-			moveTo(WIDTH/7, HEIGHT/1.5);
-			lineTo(6*WIDTH/7, HEIGHT/1.5);
+			moveTo(WIDTH/20, HEIGHT/1.5);
+			lineTo(6.8*WIDTH/7, HEIGHT/1.5);
 			stroke();  
 
 			//Draw arrow left side - down part
-			moveTo(WIDTH/7, HEIGHT/1.5);
-			lineTo(WIDTH/7+10, HEIGHT/1.5+10);
+			moveTo(WIDTH/20, HEIGHT/1.5);
+			lineTo(WIDTH/20+10, HEIGHT/1.5+10);
 			stroke();
 
 			//Draw arrow left side - up part
-			moveTo(WIDTH/7, HEIGHT/1.5);
-			lineTo(WIDTH/7+10, HEIGHT/1.5-10);
+			moveTo(WIDTH/20, HEIGHT/1.5);
+			lineTo(WIDTH/20+10, HEIGHT/1.5-10);
 			stroke();
 
 			//Draw arrow right side - down part
-			moveTo(6*WIDTH/7, HEIGHT/1.5);
-			lineTo(6*WIDTH/7-10, HEIGHT/1.5+10);
+			moveTo(6.8*WIDTH/7, HEIGHT/1.5);
+			lineTo(6.8*WIDTH/7-10, HEIGHT/1.5+10);
 			stroke();
 
 			//Draw arrow right side - up part
-			moveTo(6*WIDTH/7, HEIGHT/1.5);
-			lineTo(6*WIDTH/7-10, HEIGHT/1.5-10);
+			moveTo(6.8*WIDTH/7, HEIGHT/1.5);
+			lineTo(6.8*WIDTH/7-10, HEIGHT/1.5-10);
 			stroke();
 
 			//For loop for drawing number line with scale 
@@ -279,10 +303,10 @@ $(function() {
 				beginPath();
 				strokeStyle = '#4682b4';
 				lineWidth = 3;
-				moveTo(WIDTH/5+ i * interval, HEIGHT/1.5 - 10);
-				lineTo(WIDTH/5 + i * interval, HEIGHT/1.5 + 10);
+				moveTo(WIDTH/12+ i * interval, HEIGHT/1.5 - 10);
+				lineTo(WIDTH/12 + i * interval, HEIGHT/1.5 + 10);
 				fillStyle = '#4682b4';
-				fillText(i, (WIDTH/5 + i * interval )- 5, HEIGHT/1.5 + 25);
+				fillText(i, (WIDTH/12 + i * interval )- 5, HEIGHT/1.5 + 25);
 				if(!i) {
 					strokeStyle = '#000';
 				}
@@ -327,12 +351,14 @@ $(function() {
 
 	function myMove(e){
 		if (dragok){
-			console.log('inside myMove');
+			
 			x = e.pageX - canvas.offsetLeft;
 			y = e.pageY - canvas.offsetTop;
 			x1= e.pageX - canvas.offsetLeft;
 			//y1 = e.pageY - canvas.offsetTop;
-			pointerValue = (x1-190)/30 - 0.3333333333333333;
+			// pointerValue = (x1-210)/40 - 0.3333333333333333;
+			pointerValue = ((x1-140)/65 + 0.15).toFixed(1) ;
+			console.log('inside myMove', pointerValue);
 			calculateNormalDistributionRange(finalAnswer);
 		}
 	}
@@ -363,12 +389,12 @@ $(function() {
 		canvas.onmousemove = null;
 	}
 	function displaySelectedValues (displaySelectedValues) {
-		document.querySelector("#selectedVals").innerHTML =arrayNum.map(e => (e-190)/30).join(", ");
+		document.querySelector("#selectedVals").innerHTML =arrayNum.map(e => (e-140)/65).join(", ");
 	}
 	function sortArray(arr) {
 		const arrN = [...arr].sort();
 		const sortedArray = arrN.sort(function (a, b) {  return a - b;  });
-		document.getElementById("sortedVals").innerHTML = sortedArray.map(e => (e-190)/30).join(", ");
+		document.getElementById("sortedVals").innerHTML = sortedArray.map(e => (e-140)/65).join(", ");
 		//calcMedian(sortedArray);
 	}
 

@@ -1,6 +1,6 @@
 .canvas-container {
-	width: 63vw;
-    height: 68vh;
+	width: 98vw;
+    height: 50vh;
 	display: inline-block;
 }
 #canvas {
@@ -12,25 +12,47 @@
 	border: 2px solid red; 
 }
 .feedbackSection {
-	width: 33%;
-    height: 500px;
+	/* width: 33%; */
+    height: 20vh;
     /* display: inline-block; */
-    border: 1px solid black;
-	border-radius: 10px;
-    float: right;
-    margin-right: 1.5%;
+    /* border: 1px solid black; */
+	/* border-radius: 10px; */
+    /* float: right; */
+    /* margin-right: 1.5%; */
 }
 .feedbackSection > h3, .finalAnswerReveal > h3{
 	text-align: center;
+	margin-top: 0.5%;
+	margin-bottom:0 ;
 }
 .finalAnswerReveal > h3{
 	margin-top: 17.5%;
 }
-.feedbackSection > div {
-	padding:3.5% .5%;
+.container {
+	display: flex;
+	flex-wrap: wrap;
+	flex-flow: row;
+	justify-content: space-evenly;
+	align-items: flex-start;
+	align-content: center;
+	gap: 10px;
+  	gap: 10px 20px; /* row-gap column gap */
+  	row-gap: 10px;
+  	column-gap: 20px;
+}
+
+.item {
+	order: 3;
+	flex-grow: 3;
+	align-self: auto;
+}
+
+.feedback {
+	padding:1.5% .5%;
 	font-size: 20px;
 	text-align:center;
-	margin:2%;
+	margin:1%;
+	/* width: 20vh; */
 }
 
 .success-1 {
@@ -92,4 +114,9 @@
 	background-repeat:no-repeat;
 	background-position: center; 
 	background-color: #dedcf35e;
+}
+
+.feedback {
+	border: 2px solid #000;
+	color: #000;
 }
