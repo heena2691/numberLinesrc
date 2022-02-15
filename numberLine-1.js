@@ -51,6 +51,10 @@ $(function() {
 		document.querySelector("#selectedVals").innerHTML = "No number selected";
 		document.querySelector("#sortedVals").innerHTML = "No number selected";
 		document.querySelector('input[name="calc"]:checked').checked = false;
+		const feedbackSectionDivs = document.querySelectorAll(".feedback");
+		feedbackSectionDivs.forEach(el => el.removeAttribute("style"));
+
+
 	});
 	calculateButton.addEventListener('click', () => {
 		let arr = arrayNum.map(e => (e-140)/65);
@@ -155,8 +159,8 @@ $(function() {
 
 	function calculateNormalDistributionRange(finalAnswer) {
 		let oneSD , twoSD, threeSD;
-		oneSD = 0.341 * finalAnswer;
-		twoSD = 0.477 * finalAnswer;
+		oneSD =  0.341 * finalAnswer;
+		twoSD =  0.477 * finalAnswer;
 		threeSD = 0.498 * finalAnswer;
 		console.log(finalAnswer);
 		if(pointerValue == finalAnswer) {
@@ -165,59 +169,36 @@ $(function() {
 			const note = document.querySelector("#correctGuess");
 			note.style.cssText += 'color:#FFF;border:2px solid #228C22; background-color:#228C22';
 		}
-		if(pointerValue > finalAnswer) {
-			console.log(pointerValue);
-			if(pointerValue <= finalAnswer+oneSD) {
-				console.log('One SD on the right',pointerValue );
-				changeFeedbackStyles();
-				const note = document.querySelector("#sd-1-right");
-				note.style.cssText += 'color:#FFF;border:2px solid #228C22; background-color:#228C22';
-			}
-			else if(pointerValue > finalAnswer+oneSD && pointerValue <= finalAnswer+twoSD) {
-				console.log('Two SD on the right',pointerValue );
-				changeFeedbackStyles();
-				const note = document.querySelector("#sd-2-right");
-				note.style.cssText += 'color:#FFF;border:2px solid #00915F; background-color:#00915F';
-			}
-			else if(pointerValue > finalAnswer+twoSD && pointerValue <= finalAnswer+threeSD) {
-				console.log('three SD on the right',pointerValue );
-				changeFeedbackStyles();
-				const note = document.querySelector("#sd-3-or-more");
-				note.style.cssText += 'color:#FFF;border:2px solid #FF966F; background-color:#FF966F';
-			}
-			else {
-				console.log('Four SD on the right');
-				changeFeedbackStyles();
-				const note = document.querySelector("#sd-3-or-more");
-				note.style.cssText += 'color:#FFF;border:2px solid red; background-color:red';
-			}
-		}
 		if(pointerValue < finalAnswer) {
-			if(pointerValue >= finalAnswer-oneSD) {
+			if(pointerValue >= finalAnswer - oneSD) {
 				console.log('One SD on the left',pointerValue);
 				changeFeedbackStyles();
 				const note = document.querySelector("#sd-1-left");
-				note.style.cssText += 'color:#FFF;border:2px solid #228C22; background-color:#228C22';
+				note.style.cssText += 'color:#FFF;border:2px solid #228C22; background-color:#87A96B';
 			}
-			else if(pointerValue < finalAnswer-oneSD && pointerValue >= finalAnswer-twoSD) {
+			else {
 				console.log('Two SD on the left',pointerValue );
 				changeFeedbackStyles();
 				const note = document.querySelector("#sd-2-left");
-				note.style.cssText += 'color:#FFF;border:2px solid #00915F; background-color:#00915F';
-			}
-			else if(pointerValue < finalAnswer-twoSD && pointerValue >= finalAnswer-threeSD) {
-				console.log('three SD on the left',pointerValue );
-				changeFeedbackStyles();
-				const note = document.querySelector("#sd-3-or-more");
-				note.style.cssText += 'color:#FFF;border:2px solid #FF966F; background-color: #FF966F;';
-			}
-			else {
-				console.log('Four SD on the left', pointerValue);
-				changeFeedbackStyles();
-				const note = document.querySelector("#sd-3-or-more");
-				note.style.cssText += 'color:#FFF;border:2px solid red; background-color: red;';
+				note.style.cssText += 'color:#FFF;border:2px solid #00915F; background-color:#ACE1AF';
 			}
 		}
+		if(pointerValue > finalAnswer) {
+			console.log(pointerValue);
+			if(pointerValue > finalAnswer && pointerValue <= Number(finalAnswer) + Number(oneSD)) {
+				console.log('One SD on the right',pointerValue );
+				changeFeedbackStyles();
+				const note = document.querySelector("#sd-1-right");
+				note.style.cssText += 'color:#FFF;border:2px solid #228C22; background-color:#FF7F50';
+			}
+			else if(pointerValue > Number(finalAnswer) + Number(oneSD) && pointerValue <= Number(finalAnswer) + Number(twoSD)) {
+				console.log('Two SD on the right',pointerValue );
+				changeFeedbackStyles();
+				const note = document.querySelector("#sd-2-right");
+				note.style.cssText += 'color:#FFF;border:2px solid #00915F; background-color:#EE204D';
+			}
+		}
+		
 	}
 
 	changeFeedbackStyles = () => {
@@ -356,7 +337,6 @@ $(function() {
 			y = e.pageY - canvas.offsetTop;
 			x1= e.pageX - canvas.offsetLeft;
 			//y1 = e.pageY - canvas.offsetTop;
-			// pointerValue = (x1-210)/40 - 0.3333333333333333;
 			pointerValue = ((x1-140)/65 + 0.15).toFixed(1) ;
 			console.log('inside myMove', pointerValue);
 			calculateNormalDistributionRange(finalAnswer);
