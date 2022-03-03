@@ -80,8 +80,9 @@
     padding: 0.5% 0.5% 0.5% 14%;
 }
 
-.numberSelected > span{
+.numberSelected > div {
 	padding-right: 1.5%;
+	display: inline-block;
 }
 .numberSorted > span {
 	padding-right: 5%;
