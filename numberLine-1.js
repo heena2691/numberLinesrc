@@ -46,6 +46,8 @@ $(function() {
 
 	const resetButton = document.querySelector("#rstBtn");
 	const calculateButton = document.querySelector("#calcBtn");
+	const selectedValueField = document.querySelector("#selectedVals");
+
 	resetButton.addEventListener('click', () => {
 		arrayNum.length= 0;
 		document.querySelector("#selectedVals").innerHTML = "No number selected";
@@ -63,9 +65,31 @@ $(function() {
 		if(checkNumberSelected && calcTypeSelected) {
 			calcType = document.querySelectorAll('input[name="calc"]:checked')[0].value;
 			calculateFinalAnswer(arr, calcType);
-			console.log('Final Answer =',finalAnswer);
 		}
 	});
+
+	selectedValueField.addEventListener('input' , updateValue);
+
+	function updateValue () {
+		let newArr = transformNumberArrayFromInput(selectedValueField.innerHTML);
+		selectedValueField.innerHTML = selectedValueField.innerHTML.replace(/(&nbsp;)+$/, '');
+		console.log(selectedValueField.innerHTML);
+		
+		arrayNum.length =0;
+		newArr.forEach(el => {
+			arrayNum.push(el*65 + 140);
+		});
+		console.log("arrayNum =" +arrayNum);
+		sortArray(arrayNum);		
+	}
+
+	function transformNumberArrayFromInput(field) {
+		let updatedArray = field.replace(/,&nbsp;/g, '');
+		updatedArray = updatedArray.replace(/(,$)/g, "")
+		let split = updatedArray.split(', ');
+		split = updatedArray.split(',');
+		return split;
+	}
 
 	function checkNumberSelection (arr) {
 		if(arr.length === 0) {
@@ -112,7 +136,6 @@ $(function() {
 		arr.forEach(el => sum = sum +el);
 		mean = sum /arr.length;
 		finalAnswer = mean.toFixed(1);
-		//console.log(mean);
 		// calculateNormalDistributionRange(mean);
 	}
 	//Calculate Median for all the numbers selected
@@ -125,7 +148,6 @@ $(function() {
 			median = (arrSorted[Math.floor(arrSorted.length/2)] + arrSorted[Math.floor(arrSorted.length/2) -1])/ 2;
 		}
 		finalAnswer = median.toFixed(1);
-		//console.log(median);
 	}
 	//Calculate Mode for all the numbers selected
 	function calculateMode(arr) {
@@ -144,16 +166,13 @@ $(function() {
 		}
 		else {
 			mode = mode[0];
-			//console.log(mode);
 		}
 		finalAnswer = mode.toFixed(1);
 	}
 	//Calculate Range for all the numbers selected
 	function calculateRange(arr) {
 		const arrSorted = arr.sort(function (a, b) {  return a - b;  });
-		console.log(arr);
 		range = arrSorted[arrSorted.length -1] - arrSorted[0];
-		console.log(range);
 		finalAnswer = range.toFixed(1);
 	}
 
@@ -162,37 +181,30 @@ $(function() {
 		oneSD =  0.341 * finalAnswer;
 		twoSD =  0.477 * finalAnswer;
 		threeSD = 0.498 * finalAnswer;
-		console.log(finalAnswer);
 		if(pointerValue == finalAnswer) {
-			console.log('correct Answer', pointerValue);
 			changeFeedbackStyles();
 			const note = document.querySelector("#correctGuess");
 			note.style.cssText += 'color:#FFF;border:2px solid #228C22; background-color:#228C22';
 		}
 		if(pointerValue < finalAnswer) {
 			if(pointerValue >= finalAnswer - oneSD) {
-				console.log('One SD on the left',pointerValue);
 				changeFeedbackStyles();
 				const note = document.querySelector("#sd-1-left");
 				note.style.cssText += 'color:#FFF;border:2px solid #228C22; background-color:#87A96B';
 			}
 			else {
-				console.log('Two SD on the left',pointerValue );
 				changeFeedbackStyles();
 				const note = document.querySelector("#sd-2-left");
 				note.style.cssText += 'color:#FFF;border:2px solid #00915F; background-color:#ACE1AF';
 			}
 		}
 		if(pointerValue > finalAnswer) {
-			console.log(pointerValue);
 			if(pointerValue > finalAnswer && pointerValue <= Number(finalAnswer) + Number(oneSD)) {
-				console.log('One SD on the right',pointerValue );
 				changeFeedbackStyles();
 				const note = document.querySelector("#sd-1-right");
 				note.style.cssText += 'color:#FFF;border:2px solid #228C22; background-color:#FF7F50';
 			}
 			else if(pointerValue > Number(finalAnswer) + Number(oneSD) && pointerValue <= Number(finalAnswer) + Number(twoSD)) {
-				console.log('Two SD on the right',pointerValue );
 				changeFeedbackStyles();
 				const note = document.querySelector("#sd-2-right");
 				note.style.cssText += 'color:#FFF;border:2px solid #00915F; background-color:#EE204D';
@@ -211,6 +223,28 @@ $(function() {
 		canvas = document.getElementById("canvas");
 		ctx = canvas.getContext("2d");
 		return setInterval(draw, 10);
+	}
+
+	function draw1(fields) {
+		clear();
+		ctx.fillStyle = "#FFF";
+		rect(0,0,WIDTH,HEIGHT);
+		createNumberLine();
+		createUserValueArrow();
+		drawCircles1(fields);
+	}
+
+	function drawCircles1(fields) {
+		const uniqueValues = Array.from(new Set(fields));
+		console.log(uniqueValues);
+		for (const val of uniqueValues) {
+		  const n = countOccurrences(fields, val);
+		  for (let i = 0; i < n; i++) {
+			ctx.beginPath();
+			ctx.arc(val-10,(HEIGHT/1.5-17)-(i*30),15,0,2*Math.PI);
+			ctx.stroke();
+		  }
+		}
 	}
 
 	function draw() {
@@ -236,7 +270,6 @@ $(function() {
 	// 	ctx.beginPath();
 	// 	//Get selected number on the number line
 	// 	numSelected = (x2-190)/30;
-	// 	console.log(x2);
 	// 	//ctx.arc(100, 75, 50, 0, 2 * Math.PI);
 	// 	ctx.arc(x2+9,(HEIGHT/1.5-17)-((countOccurrences(arrayNum, numSelected))*30),15,0,2*Math.PI);
 	// 	// userInputCircles.push(ctx.arc(x2+9,(HEIGHT/1.5-17)-((countOccurrences(arrayNum, numSelected))*30),15,0,2*Math.PI));
@@ -338,7 +371,6 @@ $(function() {
 			x1= e.pageX - canvas.offsetLeft;
 			//y1 = e.pageY - canvas.offsetTop;
 			pointerValue = ((x1-140)/65 + 0.15).toFixed(1) ;
-			console.log('inside myMove', pointerValue);
 			calculateNormalDistributionRange(finalAnswer);
 		}
 	}
