@@ -238,7 +238,7 @@ $(function() {
 		  for (let i = 0; i < n; i++) {
 			ctx.beginPath();
 			ctx.arc(val-10,(HEIGHT/1.5-17)-(i*30),15,0,2*Math.PI);
-			ctx.fillText((arrayNum[i]-140)/65, val-12, (HEIGHT/1.5-17)-(i*30));
+			ctx.fillText((val-140)/65, val-14, (HEIGHT/1.5-17)-(i*30));
 			ctx.stroke();
 		  }
 		}
