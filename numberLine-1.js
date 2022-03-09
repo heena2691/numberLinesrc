@@ -7,8 +7,6 @@ $(function() {
 	var y = 50;
 	var x1 =130;
 	var y1 = 160;
-	// var WIDTH = 1000;
-	// var HEIGHT = 500;
 	var WIDTH = canvasSize.offsetWidth-10;
 	var HEIGHT = canvasSize.offsetHeight-17;
 	var dragok = false;
@@ -31,8 +29,7 @@ $(function() {
 		canvasSize.width  = canvasSize.offsetWidth;
 		canvasSize.height = canvasSize.offsetHeight;
 	  }
-	//canvas.addEventListener("mousedown", getPosition, false);
-	//$("#canvas").mousedown(function(e){handleMouseDown(e);});
+
 	function rect(x,y,w,h) {
 		ctx.beginPath();
 		ctx.rect(x,y,w,h);
@@ -225,28 +222,6 @@ $(function() {
 		return setInterval(draw, 10);
 	}
 
-	function draw1(fields) {
-		clear();
-		ctx.fillStyle = "#FFF";
-		rect(0,0,WIDTH,HEIGHT);
-		createNumberLine();
-		createUserValueArrow();
-		drawCircles1(fields);
-	}
-
-	function drawCircles1(fields) {
-		const uniqueValues = Array.from(new Set(fields));
-		console.log(uniqueValues);
-		for (const val of uniqueValues) {
-		  const n = countOccurrences(fields, val);
-		  for (let i = 0; i < n; i++) {
-			ctx.beginPath();
-			ctx.arc(val-10,(HEIGHT/1.5-17)-(i*30),15,0,2*Math.PI);
-			ctx.stroke();
-		  }
-		}
-	}
-
 	function draw() {
 		clear();
 		ctx.fillStyle = "#FFF";
@@ -254,6 +229,7 @@ $(function() {
 		createNumberLine();
 		createUserValueArrow();
 		drawCircles();
+		fillTextinBubble();
 	}
     function drawCircles() {
 		const uniqueValues = Array.from(new Set(arrayNum));
@@ -262,20 +238,12 @@ $(function() {
 		  for (let i = 0; i < n; i++) {
 			ctx.beginPath();
 			ctx.arc(val-10,(HEIGHT/1.5-17)-(i*30),15,0,2*Math.PI);
+			ctx.fillText((arrayNum[i]-140)/65, val-12, (HEIGHT/1.5-17)-(i*30));
 			ctx.stroke();
 		  }
 		}
 	}
-	// function drawCircle(x2){
-	// 	ctx.beginPath();
-	// 	//Get selected number on the number line
-	// 	numSelected = (x2-190)/30;
-	// 	//ctx.arc(100, 75, 50, 0, 2 * Math.PI);
-	// 	ctx.arc(x2+9,(HEIGHT/1.5-17)-((countOccurrences(arrayNum, numSelected))*30),15,0,2*Math.PI);
-	// 	// userInputCircles.push(ctx.arc(x2+9,(HEIGHT/1.5-17)-((countOccurrences(arrayNum, numSelected))*30),15,0,2*Math.PI));
-	// 	ctx.stroke();
-	// 	//calcMean(arrayNum);
-	// }
+
 	function createNumberLine() {
 		if(document.querySelector("#selectedVals").innerHTML === "") {
 			document.querySelector("#selectedVals").innerHTML = "No number selected";
@@ -327,8 +295,6 @@ $(function() {
 				fill();
 				stroke();
 			}
-			//createUserValueArrow();
-
 		}
 	}
 	function createUserValueArrow() {
@@ -337,10 +303,6 @@ $(function() {
 				
 			strokeStyle = '#000';
 			lineWidth = 3;
-			
-			// draw straight vertical line 
-			//moveTo(WIDTH/5, HEIGHT/1.2 - 80);
-			//lineTo(WIDTH/5, HEIGHT/1.2 + 5);
 			
 			moveTo(x1, y1);
 			lineTo(x1, y1+85);
@@ -407,7 +369,6 @@ $(function() {
 		const arrN = [...arr].sort();
 		const sortedArray = arrN.sort(function (a, b) {  return a - b;  });
 		document.getElementById("sortedVals").innerHTML = sortedArray.map(e => (e-140)/65).join(", ");
-		//calcMedian(sortedArray);
 	}
 
 	init();
