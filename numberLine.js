@@ -7,8 +7,6 @@ $(function() {
 	var y = 50;
 	var x1 =130;
 	var y1 = 160;
-	// var WIDTH = 1000;
-	// var HEIGHT = 500;
 	var WIDTH = canvasSize.offsetWidth-10;
 	var HEIGHT = canvasSize.offsetHeight-17;
 	var dragok = false;
@@ -31,8 +29,7 @@ $(function() {
 		canvasSize.width  = canvasSize.offsetWidth;
 		canvasSize.height = canvasSize.offsetHeight;
 	  }
-	//canvas.addEventListener("mousedown", getPosition, false);
-	//$("#canvas").mousedown(function(e){handleMouseDown(e);});
+
 	function rect(x,y,w,h) {
 		ctx.beginPath();
 		ctx.rect(x,y,w,h);
@@ -48,15 +45,25 @@ $(function() {
 	const calculateButton = document.querySelector("#calcBtn");
 	const selectedValueField = document.querySelector("#selectedVals");
 
+	const showHint = document.querySelector("#showHint");
+	const showAnswer = document.querySelector("#showAnswer");
+
 	resetButton.addEventListener('click', () => {
 		arrayNum.length= 0;
 		document.querySelector("#selectedVals").innerHTML = "No number selected";
 		document.querySelector("#sortedVals").innerHTML = "No number selected";
-		document.querySelector('input[name="calc"]:checked').checked = false;
+		if(document.querySelectorAll('input[name="calc"]:checked').length >0)
+			document.querySelector('input[name="calc"]:checked').checked = false;
 		const feedbackSectionDivs = document.querySelectorAll(".feedback");
 		feedbackSectionDivs.forEach(el => el.removeAttribute("style"));
-
-
+		showHint.value = "Show Hint";
+		document.querySelector(".mean-def").style.display = "none";
+		document.querySelector(".mode-def").style.display = "none";
+		document.querySelector(".range-def").style.display = "none";
+		document.querySelector(".median-def").style.display = "none";
+		showAnswer.style.display ="none";
+		showAnswer.value = "Show Answer";
+		document.querySelector(".finalAnswer").style.display ="none";
 	});
 	calculateButton.addEventListener('click', () => {
 		let arr = arrayNum.map(e => (e-140)/65);
@@ -65,27 +72,77 @@ $(function() {
 		if(checkNumberSelected && calcTypeSelected) {
 			calcType = document.querySelectorAll('input[name="calc"]:checked')[0].value;
 			calculateFinalAnswer(arr, calcType);
+			showAnswer.style.display ="inline-block";
 		}
 	});
 
+	showHint.addEventListener('click', () => {
+		if(showHint.value === "Show Hint"){
+			showHint.value = "Hide Hint";
+			if(document.querySelectorAll('input[name="calc"]:checked').length >0) {
+				calcType = document.querySelectorAll('input[name="calc"]:checked')[0].value;
+				if(calcType === 'mean') {
+					document.querySelector(".mean-def").style.display = "block";
+				}
+				else if(calcType === 'median') {
+					document.querySelector(".median-def").style.display = "block";
+				}				
+				else if(calcType === 'mode') {
+					document.querySelector(".mode-def").style.display = "block";
+				}
+				else {
+					document.querySelector(".range-def").style.display = "block";
+				}				
+			} 
+			else {
+				document.querySelector(".mean-def").style.display = "block";
+				document.querySelector(".mode-def").style.display = "block";
+				document.querySelector(".range-def").style.display = "block";
+				document.querySelector(".median-def").style.display = "block";
+			}
+		} else {
+			showHint.value = "Show Hint";
+			document.querySelector(".mean-def").style.display = "none";
+			document.querySelector(".mode-def").style.display = "none";
+			document.querySelector(".range-def").style.display = "none";
+			document.querySelector(".median-def").style.display = "none";
+		}
+	});
+
+	showAnswer.addEventListener('click', () => {
+		if(showAnswer.value === "Show Answer"){
+			showAnswer.value = "Hide Answer";
+			if(document.querySelectorAll('input[name="calc"]:checked').length >0) {
+				calcType = document.querySelectorAll('input[name="calc"]:checked')[0].value;
+				if(calcType === 'mean') {
+					document.querySelector(".finalAnswer").innerHTML ="";
+					document.querySelector(".finalAnswer").innerHTML +=("<div>Mean = "+finalAnswer+"</div>");
+					document.querySelector(".finalAnswer").style.display = "block";					
+				}
+				else if(calcType === 'median') {
+					document.querySelector(".finalAnswer").innerHTML ="";
+					document.querySelector(".finalAnswer").innerHTML +=("<div>Median = "+finalAnswer+"</div>");
+					document.querySelector(".finalAnswer").style.display = "block";					
+				}				
+				else if(calcType === 'mode') {
+					document.querySelector(".finalAnswer").innerHTML ="";
+					document.querySelector(".finalAnswer").innerHTML+=("<div>Mode = "+finalAnswer+"</div>");
+					document.querySelector(".finalAnswer").style.display = "block";					
+				}
+				else {
+					document.querySelector(".finalAnswer").innerHTML ="";
+					document.querySelector(".finalAnswer").innerHTML +=("<div>Range = "+finalAnswer+"</div>");
+					document.querySelector(".finalAnswer").style.display = "block";					
+				}		
+			}
+		}else {
+			showAnswer.value = "Show Answer";
+			document.querySelector(".finalAnswer").style.display ="none";
+		}
+	});
 	selectedValueField.addEventListener('input' , updateValue);
 
-	// selectedValueField.addEventListener('click' , checkValuesSelected);
-
-	// function checkValuesSelected () {
-	// 	if(selectedValueField.innerHTML == "No number selected") {
-	// 		selectedValueField.contentEditable = false;
-	// 	}
-	// 	else {
-	// 		selectedValueField.contentEditable = true;
-	// 		// updateValue();
-	// 	}
-	// }
-
 	function updateValue () {
-		if(selectedValueField.innerHTML == "No number selected") {
-			console.log(selectedValueField);
-		}
 		let newArr = transformNumberArrayFromInput(selectedValueField.innerHTML);
 		selectedValueField.innerHTML = selectedValueField.innerHTML.replace(/(&nbsp;)+$/, '');
 		console.log(selectedValueField.innerHTML);
@@ -240,28 +297,6 @@ $(function() {
 		return setInterval(draw, 10);
 	}
 
-	function draw1(fields) {
-		clear();
-		ctx.fillStyle = "#FFF";
-		rect(0,0,WIDTH,HEIGHT);
-		createNumberLine();
-		createUserValueArrow();
-		drawCircles1(fields);
-	}
-
-	function drawCircles1(fields) {
-		const uniqueValues = Array.from(new Set(fields));
-		console.log(uniqueValues);
-		for (const val of uniqueValues) {
-		  const n = countOccurrences(fields, val);
-		  for (let i = 0; i < n; i++) {
-			ctx.beginPath();
-			ctx.arc(val-10,(HEIGHT/1.5-17)-(i*30),15,0,2*Math.PI);
-			ctx.stroke();
-		  }
-		}
-	}
-
 	function draw() {
 		clear();
 		ctx.fillStyle = "#FFF";
@@ -277,20 +312,12 @@ $(function() {
 		  for (let i = 0; i < n; i++) {
 			ctx.beginPath();
 			ctx.arc(val-10,(HEIGHT/1.5-17)-(i*30),15,0,2*Math.PI);
+			ctx.fillText((val-140)/65, val-14, (HEIGHT/1.5-17)-(i*30));
 			ctx.stroke();
 		  }
 		}
 	}
-	// function drawCircle(x2){
-	// 	ctx.beginPath();
-	// 	//Get selected number on the number line
-	// 	numSelected = (x2-190)/30;
-	// 	//ctx.arc(100, 75, 50, 0, 2 * Math.PI);
-	// 	ctx.arc(x2+9,(HEIGHT/1.5-17)-((countOccurrences(arrayNum, numSelected))*30),15,0,2*Math.PI);
-	// 	// userInputCircles.push(ctx.arc(x2+9,(HEIGHT/1.5-17)-((countOccurrences(arrayNum, numSelected))*30),15,0,2*Math.PI));
-	// 	ctx.stroke();
-	// 	//calcMean(arrayNum);
-	// }
+
 	function createNumberLine() {
 		if(document.querySelector("#selectedVals").innerHTML === "") {
 			document.querySelector("#selectedVals").innerHTML = "No number selected";
@@ -342,8 +369,6 @@ $(function() {
 				fill();
 				stroke();
 			}
-			//createUserValueArrow();
-
 		}
 	}
 	function createUserValueArrow() {
@@ -352,10 +377,6 @@ $(function() {
 				
 			strokeStyle = '#000';
 			lineWidth = 3;
-			
-			// draw straight vertical line 
-			//moveTo(WIDTH/5, HEIGHT/1.2 - 80);
-			//lineTo(WIDTH/5, HEIGHT/1.2 + 5);
 			
 			moveTo(x1, y1);
 			lineTo(x1, y1+85);
@@ -422,7 +443,6 @@ $(function() {
 		const arrN = [...arr].sort();
 		const sortedArray = arrN.sort(function (a, b) {  return a - b;  });
 		document.getElementById("sortedVals").innerHTML = sortedArray.map(e => (e-140)/65).join(", ");
-		//calcMedian(sortedArray);
 	}
 
 	init();

@@ -45,15 +45,25 @@ $(function() {
 	const calculateButton = document.querySelector("#calcBtn");
 	const selectedValueField = document.querySelector("#selectedVals");
 
+	const showHint = document.querySelector("#showHint");
+	const showAnswer = document.querySelector("#showAnswer");
+
 	resetButton.addEventListener('click', () => {
 		arrayNum.length= 0;
 		document.querySelector("#selectedVals").innerHTML = "No number selected";
 		document.querySelector("#sortedVals").innerHTML = "No number selected";
-		document.querySelector('input[name="calc"]:checked').checked = false;
+		if(document.querySelectorAll('input[name="calc"]:checked').length >0)
+			document.querySelector('input[name="calc"]:checked').checked = false;
 		const feedbackSectionDivs = document.querySelectorAll(".feedback");
 		feedbackSectionDivs.forEach(el => el.removeAttribute("style"));
-
-
+		showHint.value = "Show Hint";
+		document.querySelector(".mean-def").style.display = "none";
+		document.querySelector(".mode-def").style.display = "none";
+		document.querySelector(".range-def").style.display = "none";
+		document.querySelector(".median-def").style.display = "none";
+		showAnswer.style.display ="none";
+		showAnswer.value = "Show Answer";
+		document.querySelector(".finalAnswer").style.display ="none";
 	});
 	calculateButton.addEventListener('click', () => {
 		let arr = arrayNum.map(e => (e-140)/65);
@@ -62,9 +72,74 @@ $(function() {
 		if(checkNumberSelected && calcTypeSelected) {
 			calcType = document.querySelectorAll('input[name="calc"]:checked')[0].value;
 			calculateFinalAnswer(arr, calcType);
+			showAnswer.style.display ="inline-block";
 		}
 	});
 
+	showHint.addEventListener('click', () => {
+		if(showHint.value === "Show Hint"){
+			showHint.value = "Hide Hint";
+			if(document.querySelectorAll('input[name="calc"]:checked').length >0) {
+				calcType = document.querySelectorAll('input[name="calc"]:checked')[0].value;
+				if(calcType === 'mean') {
+					document.querySelector(".mean-def").style.display = "block";
+				}
+				else if(calcType === 'median') {
+					document.querySelector(".median-def").style.display = "block";
+				}				
+				else if(calcType === 'mode') {
+					document.querySelector(".mode-def").style.display = "block";
+				}
+				else {
+					document.querySelector(".range-def").style.display = "block";
+				}				
+			} 
+			else {
+				document.querySelector(".mean-def").style.display = "block";
+				document.querySelector(".mode-def").style.display = "block";
+				document.querySelector(".range-def").style.display = "block";
+				document.querySelector(".median-def").style.display = "block";
+			}
+		} else {
+			showHint.value = "Show Hint";
+			document.querySelector(".mean-def").style.display = "none";
+			document.querySelector(".mode-def").style.display = "none";
+			document.querySelector(".range-def").style.display = "none";
+			document.querySelector(".median-def").style.display = "none";
+		}
+	});
+
+	showAnswer.addEventListener('click', () => {
+		if(showAnswer.value === "Show Answer"){
+			showAnswer.value = "Hide Answer";
+			if(document.querySelectorAll('input[name="calc"]:checked').length >0) {
+				calcType = document.querySelectorAll('input[name="calc"]:checked')[0].value;
+				if(calcType === 'mean') {
+					document.querySelector(".finalAnswer").innerHTML ="";
+					document.querySelector(".finalAnswer").innerHTML +=("<div>Mean = "+finalAnswer+"</div>");
+					document.querySelector(".finalAnswer").style.display = "block";					
+				}
+				else if(calcType === 'median') {
+					document.querySelector(".finalAnswer").innerHTML ="";
+					document.querySelector(".finalAnswer").innerHTML +=("<div>Median = "+finalAnswer+"</div>");
+					document.querySelector(".finalAnswer").style.display = "block";					
+				}				
+				else if(calcType === 'mode') {
+					document.querySelector(".finalAnswer").innerHTML ="";
+					document.querySelector(".finalAnswer").innerHTML+=("<div>Mode = "+finalAnswer+"</div>");
+					document.querySelector(".finalAnswer").style.display = "block";					
+				}
+				else {
+					document.querySelector(".finalAnswer").innerHTML ="";
+					document.querySelector(".finalAnswer").innerHTML +=("<div>Range = "+finalAnswer+"</div>");
+					document.querySelector(".finalAnswer").style.display = "block";					
+				}		
+			}
+		}else {
+			showAnswer.value = "Show Answer";
+			document.querySelector(".finalAnswer").style.display ="none";
+		}
+	});
 	selectedValueField.addEventListener('input' , updateValue);
 
 	function updateValue () {
@@ -229,7 +304,6 @@ $(function() {
 		createNumberLine();
 		createUserValueArrow();
 		drawCircles();
-		fillTextinBubble();
 	}
     function drawCircles() {
 		const uniqueValues = Array.from(new Set(arrayNum));
