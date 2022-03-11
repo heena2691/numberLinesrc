@@ -68,16 +68,16 @@
 	background-color: #ff000073;
 }
 .numberLineDets {
-	width: 63.2%;
-	display:inline-block;
+	/* width: 63.2%; */
+	/* display:inline-block; */
 }
 .numberSelected, .numberSorted, .calcTypes {
 	font-size: 20px;
-    padding: 1.5% 1.5% 1.5% 15%;
+    padding: 0.75% 1.5% 0.75% 35%;
 }
 .calcTypes {
 	font-size: 20px;
-    padding: 0.5% 0.5% 0.5% 14%;
+    padding: 0.5% 0.5% 0.5% 35%;
 }
 
 .numberSelected > div {
@@ -90,28 +90,26 @@
 
 .calcButton {
 	padding-top: 1.5%;
-	padding-left:10%;
+	padding-left:38%;
 }
-.rstBtn {
+.rstBtn, .showHint, .showAnswer {
 	margin-left: 2%;
-}
-
-.finalAnswerReveal {
-	width: 33%;
-	display: inline-block;
-    border: 1px solid black;
-	border-radius: 10px;
-    float: right;
-	height: 200px;
-	margin-right: 1.5%;
-	margin-top:2%;
-	background-image: url("flip.png");
-	background-repeat:no-repeat;
-	background-position: center; 
-	background-color: #dedcf35e;
 }
 
 .feedback {
 	border: 2px solid #000;
 	color: #000;
+}
+.showAnswer {
+	display: none;
+}
+.mean-def, .mode-def, .range-def, .median-def, .finalAnswer{
+	display: none;
+	margin-top: 1%;
+	padding: 0.5% 1%;
+	border: 1px solid black;
+}
+
+.definition,  .finalAnswer {
+	font-size: 20px;
 }
